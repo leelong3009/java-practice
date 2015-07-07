@@ -7,3 +7,6 @@ http://www.baptiste-wicht.com/2010/08/java-concurrency-part-4-semaphores/
 http://www.baptiste-wicht.com/2010/09/java-concurrency-part-5-monitors-locks-and-conditions/ 
 http://www.baptiste-wicht.com/2010/09/java-concurrency-atomic-variables/ 
 http://www.baptiste-wicht.com/2010/09/java-concurrency-part-7-executors-and-thread-pools/ 
+
+### java concurrency in practice source code
+http://jcip.net.s3-website-us-east-1.amazonaws.com/listings.html
