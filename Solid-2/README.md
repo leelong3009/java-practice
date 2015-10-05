@@ -1,5 +1,7 @@
 # S.O.L.I.D
 
+Refer http://www.oodesign.com/
+
 1. Single Responsitory Principle
   * A class should have only one reason to change.
   * Strong cohension, low coupling.
