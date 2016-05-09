@@ -13,47 +13,57 @@ public class GoogleGeoAPI {
 
 	public static void main(String[] args) throws ClientProtocolException, IOException, ParseException {
 		GoogleGeoAPI geoObject = new GoogleGeoAPI();
-		geoObject.displayTimeZoneFromFile();
+		geoObject.init();
+		geoObject.run();
 	}
 	
-	private void displayTimeZoneFromFile() throws ParseException {
+	private Scanner scanner;
+	private String filePath;
+	private TimeZoneUtil timeZoneUtil;
+	
+	public void init() {
+		scanner = new Scanner(System.in);
+		filePath = "";
+		timeZoneUtil = new TimeZoneUtil(new LocationInjector());
+	}
+	
+	public void run() throws ParseException {
 		System.out.println("*** Read timezone ***\n Type \"exit\" or \"quit\" to escape");
-		Scanner scanner = new Scanner(System.in);
-		String filePath = "";
-		TimeZoneUtil timeZoneUtil = new TimeZoneUtil(new LocationInjector());
-		
 		while (true) {
-			try {
-				printOut("Enter CSV file path: ");
-				filePath = scanner.nextLine();
-				if(filePath.equals("exit") || filePath.equals("quit")) {
-					scanner.close();
-					return;
-				}
-				if (timeZoneUtil.isValidExtension(filePath)) {
-					List<Location> locationList = timeZoneUtil.readLocationFromFile(filePath);
-					if (locationList != null) {
-						for (Location location : locationList) {
-							TimeZone timeZone = timeZoneUtil.getTimeZone(location);
-							if (timeZone != null) {
-								location.setArea(timeZone.getTimeZoneId());
-								location.setLocalTime(new Timestamp(location.getDate().getTime() + timeZone.getRawOffset() * 1000));
-								printOut(location.toString());
-							}
+			printOut("Enter CSV file path: ");
+			filePath = scanner.nextLine();
+			if(filePath.equals("exit") || filePath.equals("quit")) {
+				scanner.close();
+				return;
+			}
+			displayOutput();
+			printOut("=================================");
+		}
+	}
+	
+	private void displayOutput() {
+		try {
+			if (timeZoneUtil.isValidExtension(filePath)) {
+				List<Location> locationList = timeZoneUtil.readLocationFromFile(filePath);
+				if (locationList != null) {
+					for (Location location : locationList) {
+						TimeZone timeZone = timeZoneUtil.getTimeZone(location);
+						if (timeZone != null) {
+							location.setArea(timeZone.getTimeZoneId());
+							location.setLocalTime(new Timestamp(location.getDate().getTime() + timeZone.getRawOffset() * 1000));
+							printOut(location.toString());
 						}
 					}
-				} else {
-					printOut("Not valid file extension. Please input CSV file only");
 				}
-
-			} catch (FileNotFoundException e) {
-				printOut("File not found");
-			} catch (IOException e) {
-				printOut("An IOException happened");
-			} catch (InjectionException e) {
-				printOut(e.getMessage());
+			} else {
+				printOut("Not valid file extension. Please input CSV file only");
 			}
-			printOut("=================================");
+		} catch (FileNotFoundException e) {
+			printOut("File not found");
+		} catch (IOException e) {
+			printOut("An IOException happened");
+		} catch (InjectionException e) {
+			printOut(e.getMessage());
 		}
 	}
 
