@@ -1,9 +1,11 @@
 package timezone;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,36 +17,49 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import au.com.bytecode.opencsv.CSVReader;
+
 public class TimeZoneUtil {
 	
-	private final String timeZoneUrl = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=1331161200&key=AIzaSyB58YRN6g26bY6tRU6vJQdwFnvCVHIgORg";
+	private final String timeZoneUrl = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%s&key=AIzaSyB58YRN6g26bY6tRU6vJQdwFnvCVHIgORg";
+	LocationInjector injector;
 	
-	public List<Location> readLocationFromFile(String filePath) {
-		List<Location> locationList = new ArrayList<>();
-		try {
-			FileInputStream inputStream = new FileInputStream(filePath);
-			BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream));
-			
-			String location = "";
-			while((location = fileReader.readLine()) != null) {
-				String[] locationArray = location.trim().split(",");
-				locationList.add(new Location(Float.valueOf(locationArray[0].trim()), Float.valueOf(locationArray[1].trim())));
-			}
-			
-			fileReader.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+	public TimeZoneUtil(LocationInjector injector) {
+		this.injector = injector;
+	}
+	
+	public boolean isValidExtension(String filePath) {
+		if (filePath.isEmpty() || filePath == null) return false;
+		String extension = filePath.substring(filePath.lastIndexOf('.') + 1, filePath.length()).toLowerCase();
+		if ("csv".equals(extension)) {
+			return true;
 		}
+		return false;
+	}
+	
+	public List<Location> readLocationFromFile(String filePath) throws FileNotFoundException, IOException, InjectionException {
+		List<Location> locationList = new ArrayList<>();
+
+		FileReader fileReader = new FileReader(filePath);
+		CSVReader csvReader = new CSVReader(fileReader, ',', '"');
+		String[] line = csvReader.readNext();
 		
+		while (line != null) {
+			if (line.length == 3) {
+				locationList.add(injector.inject(line));
+			}
+			line = csvReader.readNext();
+		}
+		csvReader.close();
 		return locationList;
 	}
 	
-	public String getTimeZone(Location location) {
-		String result = "";
+	public TimeZone getTimeZone(Location location) {
+		TimeZone timeZone = null;
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(String.format(timeZoneUrl, location.getLatitude(), location.getLongitude()));
+		long diffSeconds = diffTimeStamp(location.getDate(), DateTimeCommon.utcRoot);
+		HttpPost post = new HttpPost(String.format(timeZoneUrl, location.getLatitude(), location.getLongitude(), diffSeconds));
 		HttpResponse response;
-		
 		try {
 			response = client.execute(post);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -58,12 +73,16 @@ public class TimeZoneUtil {
 			
 			// convert String to JSON object
 			Gson gson = new GsonBuilder().create();
-			TimeZone timeZone = gson.fromJson(buffer.toString(), TimeZone.class);
-			result = timeZone.getTimeZoneName();
+			timeZone = gson.fromJson(buffer.toString(), TimeZone.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		return result;
+		return timeZone;
 	}
+	
+	private long diffTimeStamp(Timestamp ts1, Timestamp ts2) {
+		return (ts1.getTime() - ts2.getTime()) / 1000;
+	}
+	
 }
