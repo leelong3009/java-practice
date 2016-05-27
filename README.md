@@ -19,3 +19,15 @@ Thread safety is the process to make our program safe to use in multithreaded en
 - Use of locks from java.util.concurrent.locks package.
 - Using thread safe collection classes, check this post for usage of ConcurrentHashMap for thread safety.
 - Using volatile keyword with variables to make every thread read the data from memory, not read from thread cache.
+
+### Exception & Error
+1. Error:
+	- Indicates the serious problems that reasonable application should not try to catch.
+	- It's bad idea to use `try-catch` clause for Errors. Most often, recovery from Error is **not possible**, the application should be allowed to **terminate**. (OutOfMemoryError, StackOverFlowError).
+2. Exceptions
+	- Indicates conditions that a reasonable application might want to catch
+	- Checked exception a generally those from which a program can recover. (FileNotFoundException...)
+	- Unchecked exception are those exceptions that might not happen if everything is in order, but they do occur (ArrayIndexOutOfBoundException...)
+	- RunTimeException & Error are consider as unchecked exception.
+	- RunTimeException could be handled in code but it's not required. It's usually caused by bad programming.
+
