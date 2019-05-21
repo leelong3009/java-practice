@@ -5,19 +5,13 @@ import java.util.Set;
 
 import com.sample.crackingthecoding.lib.LinkedListNode;
 
-public class Linkedlist21 {
+public class Linkedlist22 {
 
-	private static void removeDus(LinkedListNode n) {
-		Set<Integer> set = new HashSet<Integer>();
-		LinkedListNode tempNode = null;
-		while (n != null) {
-			if (set.contains(n.data)) {
-				tempNode.next = n.next;
-			} else {
-				set.add(n.data);
-				tempNode = n;
-			}
-			n = n.next;
+	private static int findKthElement(LinkedListNode n, int k) {
+		if (n.next == null) {
+			return 0;
+		} else {
+			return findKthElement(n.next, k) + 1;
 		}
 	}
 	
@@ -34,8 +28,10 @@ public class Linkedlist21 {
 		}
 		
 		System.out.println(head.printForward());
-		removeDus(head);
-		System.out.println(head.printForward());
+		
+		for (int i = 0; i < 8; i++) {
+			System.out.println(i + " " + findKthElement(head, i));
+		}
 	}
 
 }
