@@ -32,3 +32,8 @@ Thread safety is the process to make our program safe to use in multithreaded en
 	- Unchecked exception are those exceptions that might not happen if everything is in order, but they do occur (ArrayIndexOutOfBoundException...)
 	- RunTimeException & Error are consider as unchecked exception.
 	- RunTimeException could be handled in code but it's not required. It's usually caused by bad programming.
+	
+### Java build path vs classpath
+http://www.ntu.edu.sg/home/ehchua/programming/howto/environment_variables.html
+- Classpath is a parameter in the Java Virtual Machine or the Java compiler that specifies the location of user-defined classes and packages.
+- The build path is used for building your application. It contains all of your source files and all Java libraries that are required to compile the application.
