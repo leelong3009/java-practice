@@ -2,7 +2,6 @@ package com.sample.google.timezone;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -24,6 +23,7 @@ public class TimeZoneUtil {
 	
 	private final String timeZoneUrl = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%s&key=AIzaSyB58YRN6g26bY6tRU6vJQdwFnvCVHIgORg";
 	LocationInjector injector;
+	private static final Gson gson = new GsonBuilder().create();
 	
 	public TimeZoneUtil(LocationInjector injector) {
 		this.injector = injector;
@@ -57,29 +57,35 @@ public class TimeZoneUtil {
 	
 	public TimeZone getTimeZone(Location location) {
 		TimeZone timeZone = null;
-		HttpClient client = HttpClientBuilder.create().build();
 		long diffSeconds = diffTimeStamp(location.getDate(), DateTimeCommon.utcRoot);
-		HttpPost post = new HttpPost(String.format(timeZoneUrl, location.getLatitude(), location.getLongitude(), diffSeconds));
-		HttpResponse response;
+		String url = String.format(timeZoneUrl, location.getLatitude(), location.getLongitude(), diffSeconds);
+		timeZone = createTimeZoneFromString(getRemoteData(url));
+		
+		return timeZone;
+	}
+	
+	private TimeZone createTimeZoneFromString(String str) {
+		return gson.fromJson(str, TimeZone.class);
+	}
+	
+	private String getRemoteData(String url) {
 		try {
-			response = client.execute(post);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpPost post = new HttpPost(url);
+			HttpResponse response = client.execute(post);
 			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			StringBuffer buffer = new StringBuffer();
 			String line = "";
 			while((line = reader.readLine()) != null) {
 				buffer.append(line);
 			}
 			reader.close();
-			
-			// convert String to JSON object
-			Gson gson = new GsonBuilder().create();
-			timeZone = gson.fromJson(buffer.toString(), TimeZone.class);
+			return buffer.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		return timeZone;
+		return null;
 	}
 	
 	private long diffTimeStamp(Timestamp ts1, Timestamp ts2) {
