@@ -1,4 +1,4 @@
-package timezone;
+package com.sample.google.timezone;
 
 public class InjectionException extends Exception {
 	private static final long serialVersionUID = 1L;

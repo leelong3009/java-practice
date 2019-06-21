@@ -1,4 +1,4 @@
-package timezone;
+package com.sample.google.timezone;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

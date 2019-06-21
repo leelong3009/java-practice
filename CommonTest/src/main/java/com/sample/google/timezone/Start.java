@@ -1,4 +1,4 @@
-package timezone;
+package com.sample.google.timezone;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,30 +9,30 @@ import java.util.Scanner;
 
 import org.apache.http.client.ClientProtocolException;
 
-public class GoogleGeoAPI {
+public class Start {
 
 	public static void main(String[] args) throws ClientProtocolException, IOException, ParseException {
-		GoogleGeoAPI geoObject = new GoogleGeoAPI();
+		Start geoObject = new Start();
 		geoObject.init();
 		geoObject.run();
 	}
 	
 	private Scanner scanner;
-	private String filePath;
+	private String fileName;
 	private TimeZoneUtil timeZoneUtil;
 	
 	public void init() {
 		scanner = new Scanner(System.in);
-		filePath = "";
+		fileName = "";
 		timeZoneUtil = new TimeZoneUtil(new LocationInjector());
 	}
 	
 	public void run() throws ParseException {
 		System.out.println("*** Read timezone ***\n Type \"exit\" or \"quit\" to escape");
 		while (true) {
-			printOut("Enter CSV file path: ");
-			filePath = scanner.nextLine();
-			if(filePath.equals("exit") || filePath.equals("quit")) {
+			printOut("Enter CSV file name: ");
+			fileName = scanner.nextLine();
+			if(fileName.equals("exit") || fileName.equals("quit")) {
 				scanner.close();
 				return;
 			}
@@ -43,8 +43,8 @@ public class GoogleGeoAPI {
 	
 	private void displayOutput() {
 		try {
-			if (timeZoneUtil.isValidExtension(filePath)) {
-				List<Location> locationList = timeZoneUtil.readLocationFromFile(filePath);
+			if (timeZoneUtil.isValidExtension(fileName)) {
+				List<Location> locationList = timeZoneUtil.readLocationFromFile(fileName);
 				if (locationList != null) {
 					for (Location location : locationList) {
 						TimeZone timeZone = timeZoneUtil.getTimeZone(location);

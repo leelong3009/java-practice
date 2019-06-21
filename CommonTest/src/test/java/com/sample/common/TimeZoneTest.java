@@ -14,11 +14,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import timezone.DateTimeCommon;
-import timezone.InjectionException;
-import timezone.Location;
-import timezone.LocationInjector;
-import timezone.TimeZoneUtil;
+import com.sample.google.timezone.DateTimeCommon;
+import com.sample.google.timezone.InjectionException;
+import com.sample.google.timezone.Location;
+import com.sample.google.timezone.LocationInjector;
+import com.sample.google.timezone.TimeZoneUtil;
 
 public class TimeZoneTest {
 	private TimeZoneUtil timeZoneUtil;

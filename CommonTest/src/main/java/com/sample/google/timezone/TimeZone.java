@@ -1,4 +1,4 @@
-package com.sample.common;
+package com.sample.google.timezone;
 
 public class TimeZone {
 	private int dstOffset;

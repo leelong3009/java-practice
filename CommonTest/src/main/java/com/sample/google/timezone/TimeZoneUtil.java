@@ -1,10 +1,11 @@
-package timezone;
+package com.sample.google.timezone;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,11 @@ public class TimeZoneUtil {
 		return false;
 	}
 	
-	public List<Location> readLocationFromFile(String filePath) throws FileNotFoundException, IOException, InjectionException {
+	public List<Location> readLocationFromFile(String fileName) throws FileNotFoundException, IOException, InjectionException {
 		List<Location> locationList = new ArrayList<>();
 
-		FileReader fileReader = new FileReader(filePath);
-		CSVReader csvReader = new CSVReader(fileReader, ',', '"');
+		Reader inputStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(fileName));
+		CSVReader csvReader = new CSVReader(inputStreamReader, ',', '"');
 		String[] line = csvReader.readNext();
 		
 		while (line != null) {

@@ -1,4 +1,4 @@
-package timezone;
+package com.sample.google.timezone;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
