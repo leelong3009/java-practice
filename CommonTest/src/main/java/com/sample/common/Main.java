@@ -1,13 +1,28 @@
 package com.sample.common;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
 public class Main {
 
 	public static void main(String[] args) {
-		DecimalFormat formatter = new DecimalFormat("#,##0.00");
-		System.out.println(formatter.format(new BigDecimal(13434939.333)));
+		System.out.println(longestCommonPrefix(new String[] {"a"}));
 	}
 
+	public static String longestCommonPrefix(String[] strs) {
+        StringBuilder s = new StringBuilder("");
+        int idx = 0;
+        boolean flag = true;
+        if (strs.length < 1) return "";
+        if (strs.length == 1) return strs[0];
+        while(flag) {
+        	for (int i=0; i<strs.length-1; i++) {
+        		if(strs[i].length() <= idx || strs[i+1].length() <= idx || strs[i].charAt(idx) != strs[i+1].charAt(idx)) {
+        			flag = false;
+        			break;
+        		}
+        	}
+        	if (flag) s.append(strs[0].charAt(idx));
+        	idx++;
+        }
+    	
+        return s.toString();
+    }
 }

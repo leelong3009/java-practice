@@ -5,9 +5,7 @@ public class MergeSort {
 	public static void main(String[] args) {
 		int[] array = { 2, 30, 12, 1, 10, 21, 3};
 		int[] helper = new int[array.length];
-		printArray(array);
 		mergesort(array, helper, 0, array.length-1);
-		printArray(array);
 	}
 
 	public static void mergesort(int[] array, int[] helper, int low, int high) {
@@ -20,12 +18,15 @@ public class MergeSort {
 	}
 	
 	public static void merge(int[] array, int[] helper, int low, int middle, int high) {
+		System.out.println("=====================================================");
+		System.out.println("low:" + low + "--middle:" + middle + "--high:" + high);
+		System.out.println("Before*****");
+		printArray(array, low, middle, high);
 		for (int i = low; i <= high; i++) {
 			helper[i] = array[i];
 		}
-		
 		int helperLeft = low;
-		int helperRight = high;
+		int helperRight = middle + 1;
 		int current = low;
 		
 		while (helperLeft <= middle && helperRight <= high) {
@@ -40,17 +41,25 @@ public class MergeSort {
 		}
 		
 		int remaining = middle - helperLeft;
-		if (remaining > 0) {
-			for (int i = 0; i < remaining; i++) {
-				array[current + i] = helper[helperLeft + i];
-			}
+		for (int i = 0; i <= remaining; i++) {
+			array[current + i] = helper[helperLeft + i];
 		}
+		System.out.println("After*****");
+		printArray(array, low, middle, high);
 	}
 	
-	private static void printArray(int[] arr) {
-		System.out.println("-------------");
+	private static void printArray(int[] arr, int low, int middle, int high) {
 		for (int i = 0; i < arr.length; i++) {
+			if (i==low) {
+				System.out.print("(");
+			}
 			System.out.print(arr[i] + " ");
+			 if (i==middle) {
+				System.out.print("||");
+			} else if (i==high) {
+				System.out.print(")");
+			}
 		}
+		System.out.println("");
 	}
 }
