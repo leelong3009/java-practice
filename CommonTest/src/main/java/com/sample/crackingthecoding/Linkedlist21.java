@@ -7,7 +7,7 @@ import com.sample.crackingthecoding.lib.LinkedListNode;
 
 public class Linkedlist21 {
 
-	private static void removeDus(LinkedListNode n) {
+	private static void removeDuplications(LinkedListNode n) {
 		Set<Integer> set = new HashSet<Integer>();
 		LinkedListNode tempNode = null;
 		while (n != null) {
@@ -34,7 +34,7 @@ public class Linkedlist21 {
 		}
 		
 		System.out.println(head.printForward());
-		removeDus(head);
+		removeDuplications(head);
 		System.out.println(head.printForward());
 	}
 
