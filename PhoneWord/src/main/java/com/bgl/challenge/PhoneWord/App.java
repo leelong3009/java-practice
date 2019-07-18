@@ -1,17 +1,28 @@
 package com.bgl.challenge.PhoneWord;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream.GetField;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class App 
 {
 	private static Map<Integer, List<Character>> digitToCharMap = new HashMap<Integer, List<Character>>();
 	private static List<String> results = new ArrayList<String>();
 	private static Dictionary dict;
-	static Map<String, Boolean> cache = new HashMap<String, Boolean>();
 	
 	private static void initMap() {
 		digitToCharMap.put(2, Arrays.asList('A', 'B', 'C'));
@@ -24,24 +35,25 @@ public class App
 		digitToCharMap.put(9, Arrays.asList('W', 'X', 'Y', 'Z'));
 	}
 	
-    public static void main( String[] args )
+	private static Dictionary initDictionary() throws URISyntaxException, IOException {
+    	Path path = Paths.get(App.class.getClassLoader().getResource("Dictionary-sample.txt").toURI());
+    	Stream<String> lines = Files.lines(path);
+    	List<String> words = lines.map(String::trim).map(String::toUpperCase).collect(Collectors.toList());
+    	lines.close();
+    	return new Dictionary(words);
+	}
+	
+    public static void main( String[] args ) throws URISyntaxException, IOException
     {
     	initMap();
-        List<String> words = new ArrayList<String>();
-        words.add("STAR");
-        words.add("PLACES");
-        words.add("HELLO");
-        words.add("WORLD");
-        words.add("WARS");
-        words.add("KITTY");
-        
-        dict = new Dictionary(words);
-        String input = "54889";
+        dict = initDictionary();
+        String input = "78 27,927 7";
+        input = input.replaceAll("[\\s,]+", "");
         backtrack("", input);
         System.out.println(results);
     }
     
-    public static void backtrack(String prefix, String digit, Map<String, Boolean> cache) {
+    public static void backtrack(String prefix, String digit) {
     	if (digit.length() == 0) {
     		return;
     	}
@@ -57,10 +69,13 @@ public class App
     		} else {
     			if (r.isEndOfWord()) {
     				results.add(newPrefix);
-    				return;
+    				if (newDigit.length() > 0) {
+    					backtrack("", newDigit);
+    				} else {
+    					return;
+    				}
     			} else {
-    				cache.put(newPrefix, Boolean.TRUE);
-    				backtrack(newPrefix, newDigit, cache);
+    				backtrack(newPrefix, newDigit);
     			}
     		}
     	});

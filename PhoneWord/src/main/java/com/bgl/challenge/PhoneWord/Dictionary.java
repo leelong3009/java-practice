@@ -25,6 +25,6 @@ public class Dictionary {
 			currentNode = tempNode;
 		}
 		
-		return new Result(true, currentNode.isEndOfWord());
+		return new Result(currentNode.isEndOfWord());
 	}
 }
