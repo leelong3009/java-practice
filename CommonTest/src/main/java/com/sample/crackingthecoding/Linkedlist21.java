@@ -3,6 +3,7 @@ package com.sample.crackingthecoding;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sample.crackingthecoding.lib.AssortedMethods;
 import com.sample.crackingthecoding.lib.LinkedListNode;
 
 public class Linkedlist21 {
@@ -22,16 +23,7 @@ public class Linkedlist21 {
 	}
 	
 	public static void main(String[] args) {
-		LinkedListNode tail = new LinkedListNode(0, null, null);
-		LinkedListNode head = tail;
-		LinkedListNode temp = tail;
-		
-		for (int i = 0; i < 8; i++) {
-			temp = new LinkedListNode(i%3, null, null);
-			tail.setNext(temp);
-			temp.setPrevious(tail);
-			tail = temp;
-		}
+		LinkedListNode head = AssortedMethods.randomLinkedList(10, 1, 4);
 		
 		System.out.println(head.printForward());
 		removeDuplications(head);
