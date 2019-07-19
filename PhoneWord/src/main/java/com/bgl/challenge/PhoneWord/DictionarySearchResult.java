@@ -1,9 +1,9 @@
 package com.bgl.challenge.PhoneWord;
 
-public class Result {
+public class DictionarySearchResult {
 	private boolean endOfWord;
 	
-	public Result(boolean endOfWord) {
+	public DictionarySearchResult(boolean endOfWord) {
 		this.endOfWord = endOfWord;
 	}
 	
