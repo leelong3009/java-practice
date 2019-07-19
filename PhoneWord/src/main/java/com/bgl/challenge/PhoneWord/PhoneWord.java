@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-import java.util.regex.Pattern;
 
 public class PhoneWord {
 
@@ -15,8 +13,6 @@ public class PhoneWord {
 	private Map<String, List<Character>> digitToCharMap;
 	private List<String> matchedWords;
 	private StringBuilder matchedRow;
-	private String matchedWord;
-	private String onlyNumberRegex;
 	private static final String EMPTY_STRING = "";
 	private static final String HYPHEN = "-";
 
@@ -25,8 +21,6 @@ public class PhoneWord {
 		this.digitToCharMap = initDigitToCharMap();
 		this.matchedWords = new ArrayList<String>();
 		this.matchedRow = new StringBuilder();
-		this.matchedWord = null;
-		this.onlyNumberRegex = "[0-9]";
 	}
 
 	/**
