@@ -49,4 +49,11 @@ public class AppTest {
 		String[] expectedWords = new String[] {"STAR-WARS-1"};
 		Assert.assertArrayEquals(expectedWords, matchedWords.toArray());
 	}
+	
+	@Test
+	public void testInvalidMatchPhoneNumber_1() {
+		List<String> matchedWords = phoneword.findAnyMatches("11111");
+		String[] expectedWords = new String[] {};
+		Assert.assertArrayEquals(expectedWords, matchedWords.toArray());
+	}
 }

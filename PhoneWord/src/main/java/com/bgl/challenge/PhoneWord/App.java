@@ -12,7 +12,7 @@ public class App
     	Util util = new Util();
     	List<String> words = util.loadWords("c:/Dictionary-sample.txt");
     	Dictionary dict = util.createDictionary(words);
-        String input = "782792771111";
+        String input = "782769277341";
         input = input.replaceAll("[\\s,]+", "");
         PhoneWord phoneword = new PhoneWord(dict);
         List<String> matchedWords = phoneword.findAnyMatches(input);

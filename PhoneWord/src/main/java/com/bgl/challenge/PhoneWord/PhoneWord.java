@@ -6,19 +6,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class PhoneWord {
 
 	private Dictionary dict;
 	private Map<Integer, List<Character>> digitToCharMap;
 	private List<String> matchedWords;
-	private StringBuilder oneMatchedWord;
+	private StringBuilder matchedRow;
+	private String matchedWord;
+	private String onlyNumberRegex;
 
 	public PhoneWord(Dictionary dict) {
 		this.dict = dict;
 		this.digitToCharMap = initDigitToCharMap();
 		this.matchedWords = new ArrayList<String>();
-		this.oneMatchedWord = new StringBuilder();
+		this.matchedRow = new StringBuilder();
+		this.matchedWord = null;
+		this.onlyNumberRegex = "[0-9]";
 	}
 
 	/**
@@ -34,7 +39,7 @@ public class PhoneWord {
 	
 	private void reset() {
 		matchedWords.clear();
-		oneMatchedWord.setLength(0);
+		matchedRow.setLength(0);
 	}
 	
 	private Map<Integer, List<Character>> initDigitToCharMap() {
@@ -56,9 +61,14 @@ public class PhoneWord {
 		if (phoneNumber.length() == 0) {
 			return;
 		}
+		
 		String firstNumberStr = phoneNumber.substring(0, 1);
 		String remainingNumber = phoneNumber.substring(1, phoneNumber.length());
 		List<Character> charList = digitToCharMap.get(Integer.valueOf(firstNumberStr));
+		
+		if (isAtRootLoop(prefix)) {
+			matchedWord = null;
+		}
 		
 		int prevResultsSize = matchedWords.size();
 		for (int i = 0; i < charList.size(); i++) {
@@ -68,7 +78,8 @@ public class PhoneWord {
 				continue;
 			} else {
 				if (dictResult.isEndOfWord()) {
-					oneMatchedWord.append("-").append(newPrefix);
+					matchedWord = newPrefix;
+					matchedRow.append("-").append(matchedWord);
 					if (remainingNumber.length() > 0) {
 						// start a new word looking
 						backtrack("", remainingNumber);
@@ -79,44 +90,43 @@ public class PhoneWord {
 				}
 			}
 			
-			if (oneMatchedWord.length() > 0 && isAtLeaf(remainingNumber)) {
-				matchedWords.add(oneMatchedWord.substring(1, oneMatchedWord.length()));
-				oneMatchedWord.setLength(0);
+			if (isAtLeaf(remainingNumber) && matchedRow.length() > 0) {
+				addMatchedWord(matchedRow.substring(1, matchedRow.length()));
+				matchedRow.setLength(0);
 			}
 		}
 			
-		
-		if ((isAtRoot(prefix) && isNoMatch(prevResultsSize)) || charList.isEmpty()) {
-			if (isJustAddedANumber(oneMatchedWord)) {
-				if (oneMatchedWord.length() > 0) {
-					matchedWords.add(oneMatchedWord.substring(1, oneMatchedWord.length()));
-					oneMatchedWord.setLength(0);
-				}
+		// when there's no match or the number is 0/1
+		if ((isAtRootLoop(prefix) && hasNoMatch(prevResultsSize)) || charList.isEmpty()) {
+			if (isJustAddedANumber(matchedRow)) {
+				addMatchedWord(matchedRow.substring(1, matchedRow.length()));
+				matchedRow.setLength(0);
 			} else {
 				if (isAtLeaf(remainingNumber)) {
-					oneMatchedWord.append("-").append(firstNumberStr);
-					matchedWords.add(oneMatchedWord.substring(1, oneMatchedWord.length()));
-					oneMatchedWord.setLength(0);
+					if (matchedRow.length() > 0) {
+						matchedRow.append("-").append(firstNumberStr);
+						addMatchedWord(matchedRow.substring(1, matchedRow.length()));
+						matchedRow.setLength(0);
+					}
 				} else {
-					oneMatchedWord.append("-").append(firstNumberStr);
+					matchedRow.append("-").append(firstNumberStr);
 					backtrack("", remainingNumber);
 				}
-				
-				
 			}
 		}
-//		if (isAtRoot(prefix) && isNoMatch(prevResultsSize) && !isJustAddedANumber(oneMatchedWord)) {
-//			oneMatchedWord.append("-").append(firstNumberStr);
-//			backtrack("", remainingNumber);
-//		}
-		
 	}
 	
-	private boolean isNoMatch(int prevMatchedWordsSize) {
-		return prevMatchedWordsSize == matchedWords.size() && oneMatchedWord.length()==0;
+	private void addMatchedWord(String word) {
+		if (!Pattern.matches(onlyNumberRegex, word)) {
+			matchedWords.add(word);
+		}
+	}
+	
+	private boolean hasNoMatch(int prevMatchedWordsSize) {
+		return prevMatchedWordsSize == matchedWords.size() && matchedWord == null;
 	}
 
-	private boolean isAtRoot(String prefix) {
+	private boolean isAtRootLoop(String prefix) {
 		return prefix.isEmpty();
 	}
 
