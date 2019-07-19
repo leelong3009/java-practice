@@ -11,7 +11,7 @@ public class Dictionary {
 		words.forEach(word -> rootLetter.addWord(word));
 	}
 	
-	public Result contains(String prefix) {
+	public DictionarySearchResult contains(String prefix) {
 		if (prefix == null || prefix.isEmpty()) {
 			return null;
 		}
@@ -25,6 +25,6 @@ public class Dictionary {
 			currentNode = tempNode;
 		}
 		
-		return new Result(currentNode.isEndOfWord());
+		return new DictionarySearchResult(currentNode.isEndOfWord());
 	}
 }
