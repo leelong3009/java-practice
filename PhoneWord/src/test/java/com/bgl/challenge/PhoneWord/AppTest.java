@@ -44,9 +44,16 @@ public class AppTest {
 	}
 	
 	@Test
+	public void testValidMatchPhoneNumber_4() {
+		List<String> matchedWords = phoneword.findAnyMatches("7827192771");
+		String[] expectedWords = new String[] {"STAR-1-WARS-1"};
+		Assert.assertArrayEquals(expectedWords, matchedWords.toArray());
+	}
+	
+	@Test
 	public void testValidMatchPhoneNumber_3() {
 		List<String> matchedWords = phoneword.findAnyMatches("7827927711");
-		String[] expectedWords = new String[] {"STAR-WARS-1"};
+		String[] expectedWords = new String[] {};
 		Assert.assertArrayEquals(expectedWords, matchedWords.toArray());
 	}
 	
