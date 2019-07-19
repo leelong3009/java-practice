@@ -16,6 +16,8 @@ public class PhoneWord {
 	private StringBuilder matchedRow;
 	private String matchedWord;
 	private String onlyNumberRegex;
+	private static final String EMPTY_STRING = "";
+	private static final String HYPHEN = "-";
 
 	public PhoneWord(Dictionary dict) {
 		this.dict = dict;
@@ -57,7 +59,7 @@ public class PhoneWord {
 		return digitToCharMap;
 	}
 	
-	private void backtrack(String prefix, String phoneNumber) {
+	private void backtrack(String prefixWord, String phoneNumber) {
 		if (phoneNumber.length() == 0) {
 			return;
 		}
@@ -66,71 +68,75 @@ public class PhoneWord {
 		String remainingNumber = phoneNumber.substring(1, phoneNumber.length());
 		List<Character> charList = digitToCharMap.get(Integer.valueOf(firstNumberStr));
 		
-		if (isAtRootLoop(prefix)) {
+		if (isAtRootLoop(prefixWord)) {
 			matchedWord = null;
 		}
 		
-		int prevResultsSize = matchedWords.size();
 		for (int i = 0; i < charList.size(); i++) {
-			String newPrefix = prefix + charList.get(i);
-			DictionarySearchResult dictResult = dict.contains(newPrefix);
+			String newPrefixWord = prefixWord + charList.get(i);
+			DictionarySearchResult dictResult = dict.contains(newPrefixWord);
 			if (dictResult == null) {
 				continue;
 			} else {
 				if (dictResult.isEndOfWord()) {
-					matchedWord = newPrefix;
-					matchedRow.append("-").append(matchedWord);
+					matchedWord = newPrefixWord;
+					matchedRow.append(HYPHEN).append(matchedWord);
 					if (remainingNumber.length() > 0) {
 						// start a new word looking
-						backtrack("", remainingNumber);
+						backtrack(EMPTY_STRING, remainingNumber);
 					}
 				} else {
 					// continue looking for a complete word
-					backtrack(newPrefix, remainingNumber);
+					if (remainingNumber.length() > 0) {
+						backtrack(newPrefixWord, remainingNumber);
+					} else {
+						continue;
+					}
 				}
 			}
 			
-			if (isAtLeaf(remainingNumber) && matchedRow.length() > 0) {
-				addMatchedWord(matchedRow.substring(1, matchedRow.length()));
+			if (isAtLastNumber(remainingNumber) && matchedRow.length() > 0) {
+				addMatchedRow(matchedRow.substring(1, matchedRow.length()));
 				matchedRow.setLength(0);
 			}
 		}
 			
-		// when there's no match or the number is 0/1
-		if ((isAtRootLoop(prefix) && hasNoMatch(prevResultsSize)) || charList.isEmpty()) {
+		// After finishing all searches from the position of the first number,
+		// check if there's no match or this number is 0/1
+		if ((isAtRootLoop(prefixWord) && hasNoMatch()) || charList.isEmpty()) {
 			if (isJustAddedANumber(matchedRow)) {
-				addMatchedWord(matchedRow.substring(1, matchedRow.length()));
+				addMatchedRow(matchedRow.substring(1, matchedRow.length()));
 				matchedRow.setLength(0);
 			} else {
-				if (isAtLeaf(remainingNumber)) {
+				if (isAtLastNumber(remainingNumber)) {
 					if (matchedRow.length() > 0) {
-						matchedRow.append("-").append(firstNumberStr);
-						addMatchedWord(matchedRow.substring(1, matchedRow.length()));
+						matchedRow.append(HYPHEN).append(firstNumberStr);
+						addMatchedRow(matchedRow.substring(1, matchedRow.length()));
 						matchedRow.setLength(0);
 					}
 				} else {
-					matchedRow.append("-").append(firstNumberStr);
-					backtrack("", remainingNumber);
+					matchedRow.append(HYPHEN).append(firstNumberStr);
+					backtrack(EMPTY_STRING, remainingNumber);
 				}
 			}
 		}
 	}
 	
-	private void addMatchedWord(String word) {
+	private void addMatchedRow(String word) {
 		if (!Pattern.matches(onlyNumberRegex, word)) {
 			matchedWords.add(word);
 		}
 	}
 	
-	private boolean hasNoMatch(int prevMatchedWordsSize) {
-		return prevMatchedWordsSize == matchedWords.size() && matchedWord == null;
+	private boolean hasNoMatch() {
+		return matchedWord == null;
 	}
 
 	private boolean isAtRootLoop(String prefix) {
 		return prefix.isEmpty();
 	}
 
-	private boolean isAtLeaf(String digit) {
+	private boolean isAtLastNumber(String digit) {
 		return digit.isEmpty();
 	}
 
