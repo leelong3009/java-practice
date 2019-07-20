@@ -2,10 +2,12 @@ package com.bgl.challenge.PhoneWord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class PhoneWord {
 
@@ -15,23 +17,55 @@ public class PhoneWord {
 	private StringBuilder matchedRow;
 	private static final String EMPTY_STRING = "";
 	private static final String HYPHEN = "-";
-
+	private static final String SEMICOLON = ";";
+	private Consumer<String> searchAndPrintWordConsumer = number -> {
+		findWordMatches(number);
+		printResult(number, matchedWords);
+	};
+	private Predicate<String> onlyNumberPredicate = number -> number.matches("\\d+");
+	
 	public PhoneWord(Dictionary dict) {
 		this.dict = dict;
-		this.digitToCharMap = initDigitToCharMap();
-		this.matchedWords = new ArrayList<String>();
-		this.matchedRow = new StringBuilder();
+		digitToCharMap = createDigitToCharMap();
+		matchedWords = new ArrayList<String>();
+		matchedRow = new StringBuilder();
 	}
 
+	/**
+	 * Read phone numbers from a file, then search and print all word matches
+	 * @param filePath
+	 */
+	public void searchAndPrintMatchedWordsFromFile(String filePath) {
+		List<String> phonenumbers = Util.readFile(filePath);
+		phonenumbers.stream().filter(onlyNumberPredicate).forEach(searchAndPrintWordConsumer);
+	}
+	
+	/**
+	 * Read phone numbers from a input string, then search and print all word matches
+	 * @param words
+	 */
+	public void searchAndPrintMatchedWordsFromInput(String words) {
+		String[] wordArray = words.split(SEMICOLON);
+		Stream.of(wordArray).filter(onlyNumberPredicate).forEach(searchAndPrintWordConsumer);
+	}
+	
+	private void printResult(String number, List<String> matchedWords) {
+		System.out.println("Matched words of phone number \"" + number + "\":");
+		if (matchedWords.isEmpty()) {
+			System.out.println("-- empty --");
+		} else {
+			matchedWords.forEach(System.out::println);
+		}
+	}
+	
 	/**
 	 * Match phone number to words in the dictionary
 	 * @param phoneNumber input phone number
 	 * @return list of matched words
 	 */
-	public List<String> findAnyMatches(String phoneNumber) {
+	public void findWordMatches(String phoneNumber) {
 		reset();
-		this.backtrack("", "", phoneNumber);
-		return this.matchedWords;
+		backtrack(EMPTY_STRING, EMPTY_STRING, phoneNumber);
 	}
 	
 	private void reset() {
@@ -39,10 +73,8 @@ public class PhoneWord {
 		matchedRow.setLength(0);
 	}
 	
-	private Map<String, List<Character>> initDigitToCharMap() {
-		Map<String, List<Character>> digitToCharMap = new HashMap<String, List<Character>>();
-		digitToCharMap.put("0", Collections.emptyList());
-		digitToCharMap.put("1", Collections.emptyList());
+	private Map<String, List<Character>> createDigitToCharMap() {
+		Map<String, List<Character>> digitToCharMap = new HashMap<String, List<Character>>(10);
 		digitToCharMap.put("2", Arrays.asList('A', 'B', 'C'));
 		digitToCharMap.put("3", Arrays.asList('D', 'E', 'F'));
 		digitToCharMap.put("4", Arrays.asList('G', 'H', 'I'));
@@ -54,45 +86,48 @@ public class PhoneWord {
 		return digitToCharMap;
 	}
 	
-	boolean hasMatch = false;
-	private void backtrack(String combination, String prefix, String nextDigits) {
+	boolean hasWordMatch = false;
+	private void backtrack(String combinedWords, String prefix, String nextDigits) {
 		if (nextDigits.isEmpty()) {
+			// when there is no digits to proceed
 			if (prefix.isEmpty()) {
-				matchedWords.add(combination.substring(1));
+				matchedWords.add(combinedWords.substring(1));
 			} else {
 				DictionarySearchResult dictResult = dict.contains(prefix);
 				if (dictResult != null && dictResult.isEndOfWord()) {
-					hasMatch = true;
-					matchedWords.add((combination + HYPHEN + prefix).substring(1));
+					hasWordMatch = true;
+					matchedWords.add((combinedWords + HYPHEN + prefix).substring(1));
 				}
 			}
 		} else {
 			String firstDigit = nextDigits.substring(0, 1);
 			List<Character> chars = digitToCharMap.get(firstDigit);
-			for (int i = 0; i < chars.size(); i++) {
-				String newPrefix = prefix + chars.get(i);
-				DictionarySearchResult dictResult = dict.contains(newPrefix);
-				if (dictResult == null) {
-					continue;
-				} else {
-					if (dictResult.isEndOfWord()) {
-						backtrack(combination + HYPHEN + newPrefix, EMPTY_STRING, nextDigits.substring(1));
+			if (chars != null) {
+				for (int i = 0; i < chars.size(); i++) {
+					String newPrefix = prefix + chars.get(i);
+					DictionarySearchResult dictResult = dict.contains(newPrefix);
+					if (dictResult == null) {
+						continue;
 					} else {
-						backtrack(combination, newPrefix, nextDigits.substring(1));
+						if (dictResult.isEndOfWord()) {
+							backtrack(combinedWords + HYPHEN + newPrefix, EMPTY_STRING, nextDigits.substring(1));
+						} else {
+							backtrack(combinedWords, newPrefix, nextDigits.substring(1));
+						}
 					}
 				}
 			}
 			
 			// At root search
 			if (prefix.isEmpty()) {
-				if (!hasMatch) {
+				if (!hasWordMatch) {
 					// if there is no match for this position, try to add a digit
-					if (combination.isEmpty() || !isNumber(combination.substring(combination.length()-1))) {
-						backtrack(combination + HYPHEN + nextDigits.substring(0, 1), EMPTY_STRING, nextDigits.substring(1)); 
+					if (combinedWords.isEmpty() || !isNumber(combinedWords.substring(combinedWords.length()-1))) {
+						backtrack(combinedWords + HYPHEN + nextDigits.substring(0, 1), EMPTY_STRING, nextDigits.substring(1)); 
 					}
 				} else {
 					// reset
-					hasMatch = false;
+					hasWordMatch = false;
 				}
 			}
 		}
@@ -107,4 +142,9 @@ public class PhoneWord {
 		}
 		return true;
 	}
+
+	public List<String> getMatchedWords() {
+		return matchedWords;
+	}
+	
 }

@@ -7,11 +7,11 @@ public class LetterNode {
 	private char letter;
 	private Map<Character, LetterNode> children;
 	private boolean endOfWord;
-	
+
 	public LetterNode() {
 		children = new HashMap<Character, LetterNode>();
 	}
-	
+
 	public LetterNode(char letter) {
 		this();
 		this.letter = letter;
@@ -20,21 +20,23 @@ public class LetterNode {
 	public char getLetter() {
 		return letter;
 	}
-	
+
 	public void addWord(String word) {
-		if (word != null && !word.isEmpty()) {
-			char firstChar = word.charAt(0);
-			LetterNode firstChildLetterNode = getChild(firstChar);
-			if (firstChildLetterNode == null) {
-				firstChildLetterNode = new LetterNode(firstChar);
-				children.put(firstChar, firstChildLetterNode);
-			}
-			
-			if (word.length() > 1) {
-				firstChildLetterNode.addWord(word.substring(1));
-			} else {
-				firstChildLetterNode.setEndOfWord(true);
-			}
+		if (word == null || word.isEmpty()) {
+			return;
+		}
+		
+		char firstChar = word.charAt(0);
+		LetterNode childNode = getChild(firstChar);
+		if (childNode == null) {
+			childNode = new LetterNode(firstChar);
+			children.put(firstChar, childNode);
+		}
+
+		if (word.length() > 1) {
+			childNode.addWord(word.substring(1));
+		} else {
+			childNode.setEndOfWord(true);
 		}
 	}
 
@@ -49,7 +51,7 @@ public class LetterNode {
 	public Map<Character, LetterNode> getChildren() {
 		return children;
 	}
-	
+
 	public LetterNode getChild(char c) {
 		return children.get(c);
 	}
