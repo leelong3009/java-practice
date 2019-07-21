@@ -6,11 +6,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest {
+public class PhoneWordTest {
 	private Dictionary dict;
 	private PhoneWord phoneword;
 	
@@ -23,42 +25,42 @@ public class AppTest {
 		words.add("WORLD");
 		words.add("WARS");
 		words.add("KITTY");
-		dict = Util.createDictionary(words);
+		dict = mock(Dictionary.class);
 		phoneword = new PhoneWord(dict);
 	}
 	
 	@Test
 	public void testValidMatchPhoneNumber_1() {
-		phoneword.findWordMatches("54889");
-		String[] expectedWords = new String[] {"KITTY"};
+		phoneword.findWordMatches("3548891");
+		String[] expectedWords = {"3-KITTY-1"};
 		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
 	}
 	
 	@Test
 	public void testValidMatchPhoneNumber_2() {
 		phoneword.findWordMatches("782792771");
-		String[] expectedWords = new String[] {"STAR-WARS-1"};
+		String[] expectedWords = {"STAR-WARS-1"};
 		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
 	}
 	
 	@Test
 	public void testValidMatchPhoneNumber_4() {
-		phoneword.findWordMatches("7827192771");
-		String[] expectedWords = new String[] {"STAR-1-WARS-1"};
-		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
-	}
-	
-	@Test
-	public void testValidMatchPhoneNumber_3() {
-		phoneword.findWordMatches("7827927711");
-		String[] expectedWords = new String[] {};
+		phoneword.findWordMatches("7827292771");
+		String[] expectedWords = {"STAR-2-WARS-1"};
 		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
 	}
 	
 	@Test
 	public void testInvalidMatchPhoneNumber_1() {
-		phoneword.findWordMatches("11111");
-		String[] expectedWords = new String[] {};
+		phoneword.findWordMatches("22222");
+		String[] expectedWords = {};
+		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
+	}
+	
+	@Test
+	public void testInvalidMatchPhoneNumber_2() {
+		phoneword.findWordMatches("7827927711");
+		String[] expectedWords = {};
 		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
 	}
 }
