@@ -20,6 +20,7 @@ public class DictionaryTest {
 	
 	@Test
 	public void testContain() {
+		Assert.assertNotNull(dict.contains("HE"));
 		Assert.assertNotNull(dict.contains("HELLO"));
 		Assert.assertTrue(dict.contains("HELLO").isEndOfWord());
 	}

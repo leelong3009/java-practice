@@ -1,6 +1,7 @@
 package com.bgl.challenge.PhoneWord;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,27 @@ public class PhoneWordTest {
 		words.add("WORLD");
 		words.add("WARS");
 		words.add("KITTY");
-//		dict = mock(Dictionary.class);
-		dict = new Dictionary(words);
+		
+		DictionarySearchResult endOfWordResult = mock(DictionarySearchResult.class);
+		when(endOfWordResult.isEndOfWord()).thenReturn(true);
+		
+		DictionarySearchResult notEndOfWordResult = mock(DictionarySearchResult.class);
+		when(notEndOfWordResult.isEndOfWord()).thenReturn(false);
+		
+		dict = mock(Dictionary.class);
+		words.forEach(w -> {
+			String combination = "";
+			for (int i = 0; i < w.length(); i++) {
+				combination += w.charAt(i);
+				if (i == w.length() - 1) {
+					when(dict.contains(combination)).thenReturn(endOfWordResult);
+				} else {
+					when(dict.contains(combination)).thenReturn(notEndOfWordResult);
+				}
+				
+			}
+		});
+		
 		phoneword = new PhoneWord(dict);
 	}
 	

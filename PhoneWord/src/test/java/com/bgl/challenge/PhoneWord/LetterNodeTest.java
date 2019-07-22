@@ -15,9 +15,13 @@ public class LetterNodeTest {
 	
 	@Test
 	public void testAddWord_1() {
-		node.addWord("HELLO");
+		node.addWord("HOME");
 		Assert.assertNotNull(node.getChildren());
 		Assert.assertNotNull(node.getChild('H'));
+		Assert.assertNotNull(node.getChild('H').getChild('O'));
+		Assert.assertNotNull(node.getChild('H').getChild('O').getChild('M'));
+		Assert.assertNotNull(node.getChild('H').getChild('O').getChild('M'));
+		Assert.assertNotNull(node.getChild('H').getChild('O').getChild('M').getChild('E'));
 	}
 	
 	@Test
@@ -28,7 +32,7 @@ public class LetterNodeTest {
 	
 	@Test
 	public void testEndOfWord_2() {
-		node.addWord("H");
-		Assert.assertTrue(node.getChild('H').isEndOfWord());
+		node.addWord("HOME");
+		Assert.assertTrue(node.getChild('H').getChild('O').getChild('M').getChild('E').isEndOfWord());
 	}
 }
