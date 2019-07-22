@@ -1,7 +1,6 @@
 package com.bgl.challenge.PhoneWord;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,7 @@ import java.util.stream.Stream;
 public class PhoneWord {
 
 	private Dictionary dict;
-	private Map<String, List<Character>> digitToCharMap;
+	private Map<String, String> digitToCharMap;
 	private List<String> matchedWords;
 	private StringBuilder matchedRow;
 	private static final String EMPTY_STRING = "";
@@ -65,7 +64,9 @@ public class PhoneWord {
 	 */
 	public void findWordMatches(String phoneNumber) {
 		reset();
-		backtrack(EMPTY_STRING, EMPTY_STRING, phoneNumber);
+		if (phoneNumber != null && !phoneNumber.isEmpty()) {
+			backtrack(EMPTY_STRING, EMPTY_STRING, phoneNumber);
+		}
 	}
 	
 	private void reset() {
@@ -73,16 +74,16 @@ public class PhoneWord {
 		matchedRow.setLength(0);
 	}
 	
-	private Map<String, List<Character>> createDigitToCharMap() {
-		Map<String, List<Character>> digitToCharMap = new HashMap<String, List<Character>>(10);
-		digitToCharMap.put("2", Arrays.asList('A', 'B', 'C'));
-		digitToCharMap.put("3", Arrays.asList('D', 'E', 'F'));
-		digitToCharMap.put("4", Arrays.asList('G', 'H', 'I'));
-		digitToCharMap.put("5", Arrays.asList('J', 'K', 'L'));
-		digitToCharMap.put("6", Arrays.asList('M', 'N', 'O'));
-		digitToCharMap.put("7", Arrays.asList('P', 'Q', 'R', 'S'));
-		digitToCharMap.put("8", Arrays.asList('T', 'U', 'V'));
-		digitToCharMap.put("9", Arrays.asList('W', 'X', 'Y', 'Z'));
+	private Map<String, String> createDigitToCharMap() {
+		Map<String, String> digitToCharMap = new HashMap<String, String>(10);
+		digitToCharMap.put("2", "ABC");
+		digitToCharMap.put("3", "DEF");
+		digitToCharMap.put("4", "GHI");
+		digitToCharMap.put("5", "JKL");
+		digitToCharMap.put("6", "MNO");
+		digitToCharMap.put("7", "PQRS");
+		digitToCharMap.put("8", "TUV");
+		digitToCharMap.put("9", "XWYZ");
 		return digitToCharMap;
 	}
 	
@@ -101,10 +102,10 @@ public class PhoneWord {
 			}
 		} else {
 			String firstDigit = nextDigits.substring(0, 1);
-			List<Character> chars = digitToCharMap.get(firstDigit);
+			String chars = digitToCharMap.get(firstDigit);
 			if (chars != null) {
-				for (int i = 0; i < chars.size(); i++) {
-					String newPrefix = prefix + chars.get(i);
+				for (int i = 0; i < chars.length(); i++) {
+					String newPrefix = prefix + chars.charAt(i);
 					DictionarySearchResult dictResult = dict.contains(newPrefix);
 					if (dictResult == null) {
 						continue;
