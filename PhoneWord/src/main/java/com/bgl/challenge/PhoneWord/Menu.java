@@ -13,7 +13,8 @@ public class Menu {
     	Scanner scanner = new Scanner(System.in);
     	boolean quit = false;
     	while (!quit) {
-    		System.out.println("1 - Input file path, 2 - List of phone numbers, seperated by a semmicolon. E.g: \"123;789\", 3: QUIT");
+    		System.out.println("======================================================");
+    		System.out.println("1 - Input file path, 2 - Enter a phone number, 3: QUIT");
     		String option = scanner.nextLine();
     		switch (option) {
     		case "1":
@@ -22,9 +23,9 @@ public class Menu {
     			phoneWord.searchAndPrintMatchedWordsFromFile(filePath);
     			break;
     		case "2":
-    			System.out.println("List of phone numbers: ");
-    			String words = scanner.nextLine();
-    			phoneWord.searchAndPrintMatchedWordsFromInput(words);
+    			System.out.println("Enter a phone number: ");
+    			String phoneNumber = scanner.nextLine();
+    			phoneWord.searchAndPrintMatchedWordsFromInput(phoneNumber);
     			break;
     		case "3":
     			quit = true;

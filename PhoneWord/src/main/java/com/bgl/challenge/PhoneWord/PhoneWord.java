@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class PhoneWord {
 
@@ -16,11 +15,12 @@ public class PhoneWord {
 	private StringBuilder matchedRow;
 	private static final String EMPTY_STRING = "";
 	private static final String HYPHEN = "-";
-	private static final String SEMICOLON = ";";
+	
 	private Consumer<String> searchAndPrintWordConsumer = number -> {
 		findWordMatches(number);
 		printResult(number, matchedWords);
 	};
+	
 	private Predicate<String> onlyNumberPredicate = number -> number.matches("\\d+");
 	
 	public PhoneWord(Dictionary dict) {
@@ -43,9 +43,11 @@ public class PhoneWord {
 	 * Read phone numbers from a input string, then search and print all word matches
 	 * @param words
 	 */
-	public void searchAndPrintMatchedWordsFromInput(String words) {
-		String[] wordArray = words.split(SEMICOLON);
-		Stream.of(wordArray).filter(onlyNumberPredicate).forEach(searchAndPrintWordConsumer);
+	public void searchAndPrintMatchedWordsFromInput(String phoneNumber) {
+		String filteredPhoneNumber = Util.removePunctuation(phoneNumber);
+		if (onlyNumberPredicate.test(filteredPhoneNumber)) {
+			searchAndPrintWordConsumer.accept(filteredPhoneNumber);
+		};
 	}
 	
 	private void printResult(String number, List<String> matchedWords) {

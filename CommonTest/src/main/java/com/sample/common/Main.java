@@ -3,7 +3,8 @@ package com.sample.common;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println(longestCommonPrefix(new String[] {"a"}));
+		String regex = "[\\s.,?!'\":;\\-\\(\\)\\[\\]]+";
+		System.out.println("333".replaceAll(regex, ""));
 	}
 
 	public static String longestCommonPrefix(String[] strs) {

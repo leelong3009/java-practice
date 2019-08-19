@@ -98,4 +98,11 @@ public class PhoneWordTest {
 		String[] expectedWords = {};
 		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
 	}
+	
+	@Test
+	public void testInvalidMatchPhoneNumber_4() {
+		phoneword.findWordMatches("dd221");
+		String[] expectedWords = {};
+		Assert.assertArrayEquals(expectedWords, phoneword.getMatchedWords().toArray());
+	}
 }
