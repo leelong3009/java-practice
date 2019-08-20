@@ -1,21 +1,40 @@
-# Properties active for ALL profiles:
+# Depending on which profile is active, the application gives 
+# itself a different name when registering with Eureka
 ---
-# This 'name' of our application is important 
-# as the config server typically has to serve up properties for many applictions:
+spring:  cloud:    config:      uri: http://localhost:8001
+lucky-word: Singapore      
+---
 spring:
+  profiles: sentence
   application:
-    name: lab-3-client          # What set of properties will we ask the config server for?
-  
-  cloud:
-    config:
-      uri: http://localhost:8001    # Where should we call the config server at?  profiles:    active:    - singapore
+    name: lab-4-sentence
     
-server:
-  port: 8002              # What port should we expose for our web interface
+---
+spring:
+  profiles: subject
+  application:
+    name: lab-4-subject
+  
+---
+spring:
+  profiles: verb
+  application:
+    name: lab-4-verb
 
-# Uncomment these lines to activate "northamerica" as the active profile.
-# Ordinarily we would not activate a profile from within a property file, but this is just a demo:
-#---
-#spring:
-#  profiles:
-#    active: northamerica
+---
+spring:
+  profiles: article
+  application:
+    name: lab-4-article
+
+---
+spring:
+  profiles: adjective
+  application:
+    name: lab-4-adjective
+
+---
+spring:
+  profiles: noun
+  application:
+    name: lab-4-noun
