@@ -1,0 +1,39 @@
+---
+# Apply to all profiles
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-primary:8011/eureka/,http://eureka-secondary:8012/eureka/,http://eureka-tertiary:8013/eureka/
+server:
+  port: 0
+---
+spring:
+  profiles: sentence
+server:
+  port: 8020  
+words: NotApplicable
+
+---
+spring:
+  profiles: subject
+words: I,You,He,She,It
+
+---
+spring:
+  profiles: verb
+words: ran,knew,had,saw,bought
+
+---
+spring:
+  profiles: article
+words: a,the
+
+---
+spring:
+  profiles: adjective
+words: reasonable,leaky,suspicious,ordinary,unlikely
+
+---
+spring:
+  profiles: noun
+words: boat,book,vote,seat,backpack,partition,groundhog
