@@ -8,10 +8,9 @@ eureka:
   instance:
     hostname: eurekahost 
   client:
-    registerWithEureka: false
-    fetchRegistry: false
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/    
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/    
 
 # primary, secondary, and tertiary illustrate running 3 intercommunicating instances.  This example has them running
 # side-by-side on localhost -- which is unrealistic in production -- but does illustrate how multiple instances collaborate.
@@ -31,9 +30,9 @@ eureka:
   instance:
     hostname: eureka-primary       
   client:
-    registerWithEureka: true
-    fetchRegistry: true        
-    serviceUrl:
+    register-with-eureka: true
+    fetch-registry: true        
+    service-url:
       defaultZone: http://eureka-secondary:8012/eureka/,http://eureka-tertiary:8013/eureka/
 
 ---
@@ -47,9 +46,9 @@ eureka:
   instance:
     hostname: eureka-secondary       
   client:
-    registerWithEureka: true
-    fetchRegistry: true        
-    serviceUrl:
+    register-with-eureka: true
+    fetch-registry: true        
+    service-url:
       defaultZone: http://eureka-tertiary:8013/eureka/,http://eureka-primary:8011/eureka/
 
 ---
@@ -63,7 +62,7 @@ eureka:
   instance:
     hostname: eureka-tertiary       
   client:
-    registerWithEureka: true
-    fetchRegistry: true    
-    serviceUrl:
+    register-with-eureka: true
+    fetch-registry: true    
+    service-url:
       defaultZone: http://eureka-primary:8011/eureka/,http://eureka-secondary:8012/eureka/      
