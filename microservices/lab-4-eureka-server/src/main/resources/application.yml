@@ -10,7 +10,8 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-    service-url:      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/    
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/    
 
 # primary, secondary, and tertiary illustrate running 3 intercommunicating instances.  This example has them running
 # side-by-side on localhost -- which is unrealistic in production -- but does illustrate how multiple instances collaborate.
@@ -23,15 +24,15 @@ eureka:
 spring:
   profiles: primary
   application:
-    name: eureka-server-clustered   
+    name: eureka-server-clustered
 server:
-  port: 8011  
+  port: 8011
 eureka:
   instance:
-    hostname: eureka-primary       
+    hostname: eureka-primary
   client:
     register-with-eureka: true
-    fetch-registry: true        
+    fetch-registry: true
     service-url:
       defaultZone: http://eureka-secondary:8012/eureka/,http://eureka-tertiary:8013/eureka/
 
@@ -39,15 +40,15 @@ eureka:
 spring:
   profiles: secondary
   application:
-    name: eureka-server-clustered      
+    name: eureka-server-clustered
 server:
   port: 8012
 eureka:
   instance:
-    hostname: eureka-secondary       
+    hostname: eureka-secondary
   client:
     register-with-eureka: true
-    fetch-registry: true        
+    fetch-registry: true
     service-url:
       defaultZone: http://eureka-tertiary:8013/eureka/,http://eureka-primary:8011/eureka/
 
@@ -55,14 +56,14 @@ eureka:
 spring:
   profiles: tertiary
   application:
-    name: eureka-server-clustered      
+    name: eureka-server-clustered
 server:
   port: 8013
 eureka:
   instance:
-    hostname: eureka-tertiary       
+    hostname: eureka-tertiary
   client:
     register-with-eureka: true
-    fetch-registry: true    
+    fetch-registry: true
     service-url:
-      defaultZone: http://eureka-primary:8011/eureka/,http://eureka-secondary:8012/eureka/      
+      defaultZone: http://eureka-primary:8011/eureka/,http://eureka-secondary:8012/eureka/
