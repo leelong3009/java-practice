@@ -1,4 +1,4 @@
-package com.sample.crackingthecoding;
+package com.sample.crackingthecoding.searchAndsort;
 
 public class MergeSort {
 

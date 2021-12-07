@@ -1,4 +1,4 @@
-package com.sample.crackingthecoding;
+package com.sample.crackingthecoding.array.string;
 
 import java.util.Arrays;
 

@@ -5,10 +5,6 @@ public class Palindromatic {
         System.out.println(isPalindrome("a"));
     }
 
-    public static String longestPalindrome(String s) {
-        abadda
-    }
-
     public static boolean isPalindrome(String s) {
         int length = s.length();
         int middle = length / 2;

@@ -1,4 +1,4 @@
-package com.sample.crackingthecoding;
+package com.sample.crackingthecoding.array.string;
 
 public class Exc16 {
 

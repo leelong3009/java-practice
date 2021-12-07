@@ -1,4 +1,4 @@
-package com.sample.crackingthecoding;
+package com.sample.crackingthecoding.linkedlist;
 
 import com.sample.crackingthecoding.lib.AssortedMethods;
 import com.sample.crackingthecoding.lib.LinkedListNode;

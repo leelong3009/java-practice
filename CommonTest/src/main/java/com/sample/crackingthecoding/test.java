@@ -2,15 +2,9 @@ package com.sample.crackingthecoding;
 
 import java.util.Arrays;
 
-import antlr.DocBookCodeGenerator;
-
 public class test {
     public static void main(String[] args) {
         System.out.println(isUnique("abcdfa"));
-
-        dog
-        god
-        
     }
 
     public static boolean isUnique(String s) {

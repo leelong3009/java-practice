@@ -1,4 +1,4 @@
-package com.sample.crackingthecoding;
+package com.sample.crackingthecoding.searchAndsort;
 
 import java.util.LinkedList;
 import java.util.Queue;

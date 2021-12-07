@@ -1,4 +1,4 @@
-package com.sample.crackingthecoding;
+package com.sample.crackingthecoding.linkedlist;
 
 import java.util.HashSet;
 import java.util.Set;
